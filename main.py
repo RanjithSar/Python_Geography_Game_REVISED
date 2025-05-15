@@ -5,6 +5,10 @@ from CONSTANTS import *
 
 def close_application():
     game_window.destroy()
+    
+def get_difficulty():
+    difficulty = option_menu.get()
+    print(difficulty)
 
 difficulties = ["easy","medium","hard"]
 
@@ -30,6 +34,9 @@ option_dialogue.pack()
 option_menu = ttk.Combobox(game_window, values=difficulties)
 option_menu.set("Select a difficulty:")
 option_menu.pack()
+
+submit_button = tk.Button(game_window, text="Start", command=get_difficulty)
+submit_button.pack()
 
 quit_button = tk.Button(game_window, text="Quit", command=close_application)
 quit_button.pack()
