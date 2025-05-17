@@ -7,6 +7,9 @@ class Question:
     
     def __init__(self):
         self.question_type = 0
+        self.question = ""
+        self.answers = []
+        self.correct_answer = 0
         
     def change_question_type(self, new_type):
         self.question_type = new_type
@@ -21,14 +24,14 @@ class Question:
                 if len(cities) == 0 or random_city[1] not in cities:
                     cities.append(random_city)
                     
-            correct_option_index = random.randint(0,3)
-            city = cities[correct_option_index]
+            self.correct_answer = random.randint(0,3)
+            city = cities[self.correct_answer]
             
-            question = f"What state is {city[0]} from?"
-            answers = []
+            self.question = f"What state is {city[0]} from?"
+            
+            self.answers.clear()
             for i in range(4):
-                answers.append(cities[i][1])
-            return (question, answers, correct_option_index)
+                self.answers.append(cities[i][1])
             
         elif self.question_type == 1:
             
@@ -38,14 +41,16 @@ class Question:
                 if len(cities) == 0 or random_city[0] not in cities:
                     cities.append(random_city)
                     
-            correct_option_index = random.randint(0,3)
-            city = cities[correct_option_index]
+            self.correct_answer = random.randint(0,3)
+            city = cities[self.correct_answer]
             
-            question = f"Which of these cities is from {cities[correct_option_index][1]}?"
-            answers = []
+            self.question = f"Which of these cities is from {city[1]}?"
+            
+            self.answers.clear()
             for i in range(4):
-                answers.append(cities[i][0])
-            return (question, answers, correct_option_index)
+                self.answers.append(cities[i][0])
+                
+        return (self.question, self.answers, self.correct_answer)
         
         
 if __name__ == "__main__":
