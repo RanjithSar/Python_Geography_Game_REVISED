@@ -3,6 +3,7 @@ import csv
 
 class City_Information:
     cities_information = []
+    
     def __init__(self):
         with open("uscities.csv","r") as cities_file:
             reader = csv.reader(cities_file, quotechar='"')
@@ -18,5 +19,5 @@ class City_Information:
             
 if __name__ == "__main__":
     city_bank = City_Information()
-    #myCity = city_bank.choose_random_city()
-    #print(myCity)
+    myCity = city_bank.choose_random_city()
+    print(myCity)
