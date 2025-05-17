@@ -13,17 +13,17 @@ class Question:
         
     def generate_question(self):
         
-        cities = []
-        for i in range(4):
-            cities.append(Question.city_info.choose_random_city())
-            
-        print(cities)
-        print()
-
-        correct_option_index = random.randint(0,3)
-        city = cities[correct_option_index]
-        
         if self.question_type == 0:
+            
+            cities = []
+            while (len(cities) < 4):
+                random_city = Question.city_info.choose_random_city()
+                if len(cities) == 0 or random_city[1] not in cities:
+                    cities.append(random_city)
+                    
+            correct_option_index = random.randint(0,3)
+            city = cities[correct_option_index]
+            
             question = f"What state is {city[0]} from?"
             answers = []
             for i in range(4):
@@ -38,5 +38,5 @@ class Question:
 if __name__ == "__main__":
     first_question = Question()
     print(first_question.generate_question())
-    first_question.change_question_type(1)
-    print(first_question.generate_question())
+    #first_question.change_question_type(1)
+    #print(first_question.generate_question())
