@@ -1,14 +1,22 @@
-cities_file = open("uscities.csv","r")
+import random
+import csv
 
 class City_Information:
     cities_information = []
     def __init__(self):
-        for line in cities_file:
-            line_list = line.split(",")
-            necessary_information = []
-            necessary_information.append([line_list[0], line_list[3], line_list[5], line_list[8], line_list[9]])
-            City_Information.cities_information.append(necessary_information)
+        with open("uscities.csv","r") as cities_file:
+            reader = csv.reader(cities_file, quotechar='"')
+            next(reader)
+            for row in reader:
+                necessary_information = [row[0], row[3], row[5], int(row[8]), float(row[9])]
+                City_Information.cities_information.append(necessary_information)
+                
+    def choose_random_city(self):
+        random_city_index = random.randint(0,len(City_Information.cities_information))
+        random_city = City_Information.cities_information[random_city_index]
+        return random_city
             
 if __name__ == "__main__":
     city_bank = City_Information()
-    print(city_bank)
+    #myCity = city_bank.choose_random_city()
+    #print(myCity)
