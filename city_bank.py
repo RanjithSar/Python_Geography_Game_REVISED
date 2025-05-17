@@ -7,19 +7,25 @@ class City_Information:
     cities_information = []
     
     '''
-    Initializes a new city bank. 
     It opens the uscities.csv file in the root directory, skipping the first header row,
-    and collecting the city name, state name, county name, population, and population density
-    for each city from each row and storing the information in a list.
+    and collects the city name, state name, county name, population, and population density
+    for each city from each row and stores the information in a list.
     This list for each individual city is then appended to the class list cities_information.
     '''
+    with open("uscities.csv","r") as cities_file:
+        reader = csv.reader(cities_file, quotechar='"')
+        next(reader)
+        for row in reader:
+            necessary_information = [row[0], row[3], row[5], int(row[8]), float(row[9])]
+            cities_information.append(necessary_information)
+    
+    '''
+    Initializes a new city bank. 
+    Since the information is already loaded when the class is defined, each new city 
+    bank instance can access the full list upon creation.
+    '''
     def __init__(self):
-        with open("uscities.csv","r") as cities_file:
-            reader = csv.reader(cities_file, quotechar='"')
-            next(reader)
-            for row in reader:
-                necessary_information = [row[0], row[3], row[5], int(row[8]), float(row[9])]
-                City_Information.cities_information.append(necessary_information)
+        pass
     
     '''
     Returns a random city list from the class list.
