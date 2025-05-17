@@ -19,18 +19,15 @@ TITLE_FONT = tkFont.Font(family="Times New Roman",size=30)
 SUBTITLE_FONT = tkFont.Font(family="Verdana",size=20)
 
 def draw_home_screen():
-    
-    def get_difficulty():
-        global difficulty, current_mode
-        difficulty = option_menu.get()
-        switch_states()
         
     def switch_states():
-        for item in start_screen.winfo_children():
-            item.destroy()
-        current_mode = game_modes[1]
-        draw_game_window()
-        #print(difficulty)
+        global difficulty, current_mode
+        difficulty = option_menu.get()
+        if "Select a difficulty:" not in difficulty:
+            for item in start_screen.winfo_children():
+                item.destroy()
+            current_mode = game_modes[1]
+            draw_game_window()
 
     start_screen = tk.Frame(
         game_window,
@@ -57,7 +54,7 @@ def draw_home_screen():
     option_menu.set("Select a difficulty:")
     option_menu.pack()
 
-    submit_button = tk.Button(start_screen, text="Start", command=get_difficulty)
+    submit_button = tk.Button(start_screen, text="Start", command=switch_states)
     submit_button.pack()
 
     quit_button = tk.Button(start_screen, text="Quit", command=close_application)
