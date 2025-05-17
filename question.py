@@ -19,11 +19,24 @@ class Question:
             
         print(cities)
         print()
-            
+
         correct_option_index = random.randint(0,3)
-        print(cities[correct_option_index])
+        city = cities[correct_option_index]
+        
+        if self.question_type == 0:
+            question = f"What state is {city[0]} from?"
+            answers = []
+            for i in range(4):
+                answers.append(cities[i][1])
+            return (question, answers, correct_option_index)
+            
+        elif self.question_type == 1:
+            question = f"Which of these cities is from {cities[correct_option_index][1]}?"
+            return question
         
         
 if __name__ == "__main__":
     first_question = Question()
-    first_question.generate_question()
+    print(first_question.generate_question())
+    first_question.change_question_type(1)
+    print(first_question.generate_question())
