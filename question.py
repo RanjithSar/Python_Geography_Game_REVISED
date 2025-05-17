@@ -31,12 +31,25 @@ class Question:
             return (question, answers, correct_option_index)
             
         elif self.question_type == 1:
+            
+            cities = []
+            while (len(cities) < 4):
+                random_city = Question.city_info.choose_random_city()
+                if len(cities) == 0 or random_city[0] not in cities:
+                    cities.append(random_city)
+                    
+            correct_option_index = random.randint(0,3)
+            city = cities[correct_option_index]
+            
             question = f"Which of these cities is from {cities[correct_option_index][1]}?"
-            return question
+            answers = []
+            for i in range(4):
+                answers.append(cities[i][0])
+            return (question, answers, correct_option_index)
         
         
 if __name__ == "__main__":
     first_question = Question()
     print(first_question.generate_question())
-    #first_question.change_question_type(1)
-    #print(first_question.generate_question())
+    first_question.change_question_type(1)
+    print(first_question.generate_question())
