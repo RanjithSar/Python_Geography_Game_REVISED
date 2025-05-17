@@ -52,9 +52,31 @@ class Question:
                 
         return (self.question, self.answers, self.correct_answer)
         
+    def check_correct_answer(self, choice):
+        
+        if self.answers.index(choice) != self.correct_answer:
+            return False
+            
+        return True
+        
         
 if __name__ == "__main__":
     first_question = Question()
-    print(first_question.generate_question())
+    question, answers, correct_index = first_question.generate_question()
+    for answer in answers:
+        print(answer)
+    choice = input(question+" ")
+    if first_question.check_correct_answer(choice):
+        print("Good job!")
+    else:
+        print(f"Not quite!")
+        
     first_question.change_question_type(1)
-    print(first_question.generate_question())
+    question, answers, correct_index = first_question.generate_question()
+    for answer in answers:
+        print(answer)
+    choice = input(question+" ")
+    if first_question.check_correct_answer(choice):
+        print("Good job!")
+    else:
+        print(f"Not quite!")
