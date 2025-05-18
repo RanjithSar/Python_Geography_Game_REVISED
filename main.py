@@ -1,7 +1,11 @@
 import tkinter as tk
 import tkinter.font as tkFont
 from tkinter import ttk
+
+import random
+
 from CONSTANTS import *
+from question import Question
 
 '''
 function to quit tkinter. Used in the 
@@ -50,6 +54,7 @@ def draw_home_screen():
         if "Select a difficulty:" not in difficulty:
             for item in start_screen.winfo_children():
                 item.destroy()
+            start_screen.destroy()
             current_mode = game_modes[1]
             draw_game_window()
 
@@ -91,6 +96,7 @@ def draw_home_screen():
 Function to draw the game UI.
 '''
 def draw_game_window():
+    
     game_screen = tk.Frame(
         game_window,
         width=WIDTH,
@@ -98,11 +104,29 @@ def draw_game_window():
     )
     game_screen.pack()
     
+
+    current_question = Question()
+    
+    seed = random.randint(0,100)
+    if seed < 50:
+        current_question.change_question_type(0)
+    else:
+        current_question.change_question_type(1)
+    
+    question, answers, correct_choice = current_question.generate_question()
+    
     display = tk.Label(
         game_screen,
-        text=f"You selected {difficulty} mode!"
+        text=question
     )
     display.pack()
+    
+    for i in range(4):
+        ans = tk.Button(
+            game_screen,
+            text=answers[i]
+        )
+        ans.pack()
     
 '''
 starts the program on home page.
