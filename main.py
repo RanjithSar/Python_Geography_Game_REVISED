@@ -6,7 +6,6 @@ import random
 
 from CONSTANTS import *
 from question import Question
-from answer_choice import Answer
 
 '''
 function to quit tkinter. Used in the 
@@ -119,13 +118,19 @@ def draw_game_window():
     question, answers, correct_choice = current_question.generate_question()
     
     def check_answer(choice):
+
         for item in game_screen.winfo_children():
             item.destroy()
             
         if current_question.check_correct_answer(choice):
             print("Good Job!")
+
         else:
-            print("Not Quite.")
+            print(f"Not Quite. the correct answer is {answers[correct_choice]}")
+            
+        game_screen.destroy()
+        
+        draw_game_window()
     
     
     display = tk.Label(
@@ -140,11 +145,7 @@ def draw_game_window():
             text = answers[i],
             command = lambda choice=answers[i] : check_answer(choice)
         )
-        ans_btn.pack()
-        
-        
-    
-        
+        ans_btn.pack()   
     
     
 '''
