@@ -6,6 +6,7 @@ import random
 
 from CONSTANTS import *
 from question import Question
+from answer_choice import Answer
 
 '''
 function to quit tkinter. Used in the 
@@ -92,6 +93,8 @@ def draw_home_screen():
     quit_button = tk.Button(start_screen, text="Quit", command=close_application)
     quit_button.pack()
     
+
+
 '''
 Function to draw the game UI.
 '''
@@ -115,6 +118,16 @@ def draw_game_window():
     
     question, answers, correct_choice = current_question.generate_question()
     
+    def check_answer(choice):
+        for item in game_screen.winfo_children():
+            item.destroy()
+            
+        if current_question.check_correct_answer(choice):
+            print("Good Job!")
+        else:
+            print("Not Quite.")
+    
+    
     display = tk.Label(
         game_screen,
         text=question
@@ -122,11 +135,17 @@ def draw_game_window():
     display.pack()
     
     for i in range(4):
-        ans = tk.Button(
+        ans_btn = tk.Button(
             game_screen,
-            text=answers[i]
+            text = answers[i],
+            command = lambda choice=answers[i] : check_answer(choice)
         )
-        ans.pack()
+        ans_btn.pack()
+        
+        
+    
+        
+    
     
 '''
 starts the program on home page.
