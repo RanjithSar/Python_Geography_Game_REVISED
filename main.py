@@ -117,19 +117,26 @@ def draw_game_window():
         width = WIDTH,
         height = HEIGHT
     )
+    game_screen.pack()
     
     '''
-    runs until the x-button on the top right is clicked.
+    creates a random question tuple and unpacks it into three
+    variables.
     '''
-    while not x_button_clicked:
-        
-        '''
-        creates a random question tuple and unpacks it into three
-        variables.
-        '''
-        question_set = Question()
-        question, answers, correct_choice = question_set.generate_question()
+    question_set = Question()
+    question, answers, correct_choice = question_set.generate_question()
     
+    '''
+    shows the question on the game window as a label.
+    '''
+    question_label = tk.Label(
+        game_screen,
+        text = question,
+        font = SUBTITLE_FONT
+    )
+    question_label.pack()
+    
+draw_home_screen()
 
 # Listens for any events
 game_window.mainloop()
