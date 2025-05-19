@@ -3,9 +3,12 @@ import tkinter.font as tkFont
 from tkinter import ttk
 
 import random
+import threading
+import time
 
 from CONSTANTS import *
 from question import Question
+from timer import Timer
 
 '''
 function to quit tkinter. Used in the 
@@ -93,11 +96,16 @@ def draw_home_screen():
     quit_button.pack()
     
 
+clicked_answer = False
+stop_timer = threading.Event()
 
 '''
 Function to draw the game UI.
 '''
 def draw_game_window():
+    
+    global stop_timer
+    stop_timer.clear()
     
     game_screen = tk.Frame(
         game_window,
@@ -118,6 +126,10 @@ def draw_game_window():
     question, answers, correct_choice = current_question.generate_question()
     
     def check_answer(choice):
+        
+        global clicked_answer
+        clicked_answer = True
+        stop_timer.set()
 
         for item in game_screen.winfo_children():
             item.destroy()
@@ -145,13 +157,56 @@ def draw_game_window():
             text = answers[i],
             command = lambda choice=answers[i] : check_answer(choice)
         )
-        ans_btn.pack()   
+        ans_btn.pack()  
+
+    question_timer = Timer(60)
     
+    def create_timer_label(time_left):
+        time_label = tk.Label(
+            game_screen,
+            text=f"Time left: {time_left} seconds."
+        )
+        time_label.pack()
+
     
+    def display_timer():
+        
+        global clicked_answer
+        
+        while question_timer.current_time >= 0:
+            if stop_timer.is_set():
+                
+                break
+            
+            if game_screen.winfo_exists():
+                
+                game_window.after(0, lambda: create_timer_label(question_timer.get_time()))
+                question_timer.count_down()
+                
+                time.sleep(1)
+            else:
+                break
+        
+        question_timer.reset()
+        
+        
+    timer_thread = threading.Thread(target=display_timer)
+    #stop_timer = threading.Event()
+    timer_thread.start()
+    
+def on_close():
+    
+    stop_timer.set()
+    
+    game_window.destroy()
+   
 '''
 starts the program on home page.
 '''
 draw_home_screen()
 
+game_window.protocol("WM_DELETE_WINDOW",on_close)
+
 # Listens for any events
 game_window.mainloop()
+
