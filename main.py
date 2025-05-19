@@ -120,6 +120,8 @@ def draw_game_window():
     )
     game_screen.pack()
     
+    labels = {}
+    
     '''
     helper function for buttons to check the answer.
     It first clears everything within the frame and then
@@ -144,9 +146,7 @@ def draw_game_window():
         message_label.pack()
         
     def update_timer_label(time_left):
-        for item in game_screen.winfo_children():
-            if isinstance(item, tk.Label) and "Time Left: " in item.cget("text"):
-                item.config(text=f"Time left: {time_left} seconds.")
+        labels["timer_label"].config(text=f"Time left: {time_left} seconds.")
     
     '''
     creates a random question tuple and unpacks it into three
@@ -163,7 +163,8 @@ def draw_game_window():
         text = question,
         font = SUBTITLE_FONT
     )
-    question_label.pack()
+    labels["question_label"] = question_label
+    labels["question_label"].pack()
     
     '''
     creates four answer buttons displaying the possible answers.
@@ -183,10 +184,11 @@ def draw_game_window():
         
     timer_label = tk.Label(
         game_screen,
-        text = "Time Left: ",
+        text = "",
         font = PARAGRAPH_FONT
     )
-    timer_label.pack()
+    labels["timer_label"] = timer_label
+    labels["timer_label"].pack()
     
     #update_timer_label(60)
         
