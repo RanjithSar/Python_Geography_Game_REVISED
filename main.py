@@ -99,10 +99,15 @@ def draw_home_screen():
 # Initialize timer object for questions
 question_timer = Timer(60)
 
+# Check if x button is clicked or not
+x_button_clicked = False
+
 '''
 Function to draw the game UI.
 '''
 def draw_game_window():
+    
+    global x_button_clicked
     
     '''
     game screen frame to hold all widgets
@@ -112,6 +117,19 @@ def draw_game_window():
         width = WIDTH,
         height = HEIGHT
     )
+    
+    '''
+    runs until the x-button on the top right is clicked.
+    '''
+    while not x_button_clicked:
+        
+        '''
+        creates a random question tuple and unpacks it into three
+        variables.
+        '''
+        question_set = Question()
+        question, answers, correct_choice = question_set.generate_question()
+    
 
 # Listens for any events
 game_window.mainloop()
