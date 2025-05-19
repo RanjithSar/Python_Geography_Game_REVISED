@@ -39,6 +39,7 @@ defined fonts for asthetics of game.
 '''
 TITLE_FONT = tkFont.Font(family="Times New Roman",size=30)
 SUBTITLE_FONT = tkFont.Font(family="Verdana",size=20)
+PARAGRAPH_FONT = tkFont.Font(family="Verdana",size=15)
 
 '''
 Draws the main menu. The program always starts here on startup.
@@ -119,13 +120,21 @@ def draw_game_window():
     )
     game_screen.pack()
     
+    '''
+    helper function for buttons to check the answer.
+    It first clears everything within the frame and then
+    displays a message based on whether the answer is correct or
+    not.
+    '''
     def check_answer(choice):
+        
         for item in game_screen.winfo_children():
             item.destroy()
+            
         if choice == answers[correct_choice]:
             message = "Good Job!"
         else:
-            message = "Not Quite."
+            message = f"Not Quite. The correct answer is {answers[correct_choice]}."
             
         message_label = tk.Label(
             game_screen,
@@ -133,6 +142,11 @@ def draw_game_window():
             font = SUBTITLE_FONT
         )
         message_label.pack()
+        
+    def update_timer_label(time_left):
+        for item in game_screen.winfo_children():
+            if isinstance(item, tk.Label) and "Time Left: " in item.cget("text"):
+                item.config(text=f"Time left: {time_left} seconds.")
     
     '''
     creates a random question tuple and unpacks it into three
@@ -153,6 +167,9 @@ def draw_game_window():
     
     '''
     creates four answer buttons displaying the possible answers.
+    when clicked, each button will check the answer using its given
+    answer choice from the answers list passed as the argument to the 
+    check_answer function.
     '''
     for i in range(4):
         ans_button = tk.Button(
@@ -163,6 +180,17 @@ def draw_game_window():
             command = lambda choice=answers[i]: check_answer(choice)
         )
         ans_button.pack()
+        
+    timer_label = tk.Label(
+        game_screen,
+        text = "Time Left: ",
+        font = PARAGRAPH_FONT
+    )
+    timer_label.pack()
+    
+    #update_timer_label(60)
+        
+        
     
 draw_home_screen()
 
