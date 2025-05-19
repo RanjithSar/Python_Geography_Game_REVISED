@@ -95,117 +95,23 @@ def draw_home_screen():
     quit_button = tk.Button(start_screen, text="Quit", command=close_application)
     quit_button.pack()
     
-
-clicked_answer = False
-stop_timer = threading.Event()
+    
+# Initialize timer object for questions
+question_timer = Timer(60)
 
 '''
 Function to draw the game UI.
 '''
 def draw_game_window():
     
-    global stop_timer
-    stop_timer.clear()
-    
+    '''
+    game screen frame to hold all widgets
+    '''
     game_screen = tk.Frame(
         game_window,
-        width=WIDTH,
-        height=HEIGHT
+        width = WIDTH,
+        height = HEIGHT
     )
-    game_screen.pack()
-    
-
-    current_question = Question()
-    
-    seed = random.randint(0,100)
-    if seed < 50:
-        current_question.change_question_type(0)
-    else:
-        current_question.change_question_type(1)
-    
-    question, answers, correct_choice = current_question.generate_question()
-    
-    def check_answer(choice):
-        
-        global clicked_answer
-        clicked_answer = True
-        stop_timer.set()
-
-        for item in game_screen.winfo_children():
-            item.destroy()
-            
-        if current_question.check_correct_answer(choice):
-            print("Good Job!")
-
-        else:
-            print(f"Not Quite. the correct answer is {answers[correct_choice]}")
-            
-        game_screen.destroy()
-        
-        draw_game_window()
-    
-    
-    display = tk.Label(
-        game_screen,
-        text=question
-    )
-    display.pack()
-    
-    for i in range(4):
-        ans_btn = tk.Button(
-            game_screen,
-            text = answers[i],
-            command = lambda choice=answers[i] : check_answer(choice)
-        )
-        ans_btn.pack()  
-
-    question_timer = Timer(60)
-    
-    def create_timer_label(time_left):
-        time_label = tk.Label(
-            game_screen,
-            text=f"Time left: {time_left} seconds."
-        )
-        time_label.pack()
-
-    
-    def display_timer():
-        
-        global clicked_answer
-        
-        while question_timer.current_time >= 0:
-            if stop_timer.is_set():
-                
-                break
-            
-            if game_screen.winfo_exists():
-                
-                game_window.after(0, lambda: create_timer_label(question_timer.get_time()))
-                question_timer.count_down()
-                
-                time.sleep(1)
-            else:
-                break
-        
-        question_timer.reset()
-        
-        
-    timer_thread = threading.Thread(target=display_timer)
-    #stop_timer = threading.Event()
-    timer_thread.start()
-    
-def on_close():
-    
-    stop_timer.set()
-    
-    game_window.destroy()
-   
-'''
-starts the program on home page.
-'''
-draw_home_screen()
-
-game_window.protocol("WM_DELETE_WINDOW",on_close)
 
 # Listens for any events
 game_window.mainloop()
