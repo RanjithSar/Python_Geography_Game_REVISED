@@ -136,6 +136,17 @@ def draw_game_window():
     )
     question_label.pack()
     
+    '''
+    creates four answer buttons displaying the possible answers.
+    '''
+    for i in range(4):
+        ans_button = tk.Button(
+            text = answers[i],
+            width = 10,
+            height = 3
+        )
+        ans_button.pack()
+    
 draw_home_screen()
 
 # Listens for any events
