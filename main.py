@@ -119,6 +119,21 @@ def draw_game_window():
     )
     game_screen.pack()
     
+    def check_answer(choice):
+        for item in game_screen.winfo_children():
+            item.destroy()
+        if choice == answers[correct_choice]:
+            message = "Good Job!"
+        else:
+            message = "Not Quite."
+            
+        message_label = tk.Label(
+            game_screen,
+            text = message,
+            font = SUBTITLE_FONT
+        )
+        message_label.pack()
+    
     '''
     creates a random question tuple and unpacks it into three
     variables.
@@ -141,9 +156,11 @@ def draw_game_window():
     '''
     for i in range(4):
         ans_button = tk.Button(
+            game_screen,
             text = answers[i],
             width = 10,
-            height = 3
+            height = 3,
+            command = lambda choice=answers[i]: check_answer(choice)
         )
         ans_button.pack()
     
