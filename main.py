@@ -112,6 +112,12 @@ def draw_game_window():
     global x_button_clicked
     
     '''
+    checks if an answer choice is pressed.
+    This event is set when an answer choice is pressed.
+    '''
+    answer_clicked = threading.Event()
+    
+    '''
     game screen frame to hold all widgets
     '''
     game_screen = tk.Frame(
@@ -126,11 +132,14 @@ def draw_game_window():
     
     '''
     helper function for buttons to check the answer.
-    It first clears everything within the frame and then
+    It first sets the answer_choice event and then 
+    clears everything within the frame. Then, it
     displays a message based on whether the answer is correct or
     not.
     '''
     def check_answer(choice):
+        
+        answer_clicked.set()
         
         for item in game_screen.winfo_children():
             item.destroy()
@@ -158,9 +167,10 @@ def draw_game_window():
     '''
     helper function for timer thread to count down the timer
     and update the label accordingly using the update_timer_label function.
+    the timer runs until it runs out or an answer choice is clicked.
     '''
     def update_time():
-        while question_timer.get_time() >= 0:
+        while question_timer.get_time() >= 0 and not answer_clicked.is_set():
             update_timer_label(question_timer.get_time())
             question_timer.count_down()
             time.sleep(1)
