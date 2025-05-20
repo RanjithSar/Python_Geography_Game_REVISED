@@ -138,27 +138,40 @@ def draw_game_window():
     clears everything within the frame. Then, it
     displays a message based on whether the answer is correct or
     not.
+    The message shows for three seconds and then the next question is shown.
     '''
     def check_answer(choice):
         
+        # tells the timer to stop running
         answer_clicked.set()
         
+        # A new timer for counting the wait time
         wait_timer = Timer(3)
+        
+        # tells that the wait time is over
         wait_time_over = threading.Event()
         
+        '''
+        helper function to show the answer evaluation dialogue.
+        Shows the dialogue for three seconds, and then the game_screen frame
+        is destroyed. The next question is displayed.
+        '''
         def show_answer():
             
+            # Only destroy elements from frame that exists
             if game_screen.winfo_exists():
                 for item in game_screen.winfo_children():
                     item.destroy()
             
+            # Runs for exactly three seconds
             while wait_timer.get_time() > 0 and not wait_time_over.is_set():
         
                 if choice == answers[correct_choice]:
                     message = "Good Job!"
                 else:
                     message = f"Not Quite. The correct answer is {answers[correct_choice]}."
-                    
+                
+                # Draw message on frame that exists
                 if game_screen.winfo_exists():
                     
                     message_label = tk.Label(
@@ -168,20 +181,28 @@ def draw_game_window():
                     )
                     labels["message_label"] = message_label
                     labels["message_label"].pack()
-
+                
+                # Decrements the timer
                 wait_timer.count_down()
                 time.sleep(1)
                 
+                '''
+                to give the illusion of the label being shown for three seconds, the message_label
+                is deleted and redrawn every second.
+                '''
                 labels["message_label"].destroy()
-                
+            
+            # ends the wait time
             wait_time_over.set()
             
+            # destroys the frame
             game_screen.destroy()
             
+            # draws the next question
             draw_game_window()
         
+        # creates and runs the showing dialogue thread.
         timer_thread = threading.Thread(target = show_answer)
-        
         timer_thread.start()
         
     
