@@ -174,7 +174,7 @@ def draw_game_window():
                     item.destroy()
             
             # Runs for exactly three seconds
-            while wait_timer.get_time() > 0 and not wait_time_over.is_set():
+            while wait_timer.get_time() > 0 and not wait_time_over.is_set() and not x_button_clicked:
         
                 if choice == answers[correct_choice]:
                     message = "Good Job!"
@@ -229,7 +229,7 @@ def draw_game_window():
     the timer runs until it runs out or an answer choice is clicked.
     '''
     def update_time():
-        while question_timer.get_time() >= 0 and not answer_clicked.is_set():
+        while question_timer.get_time() >= 0 and not answer_clicked.is_set() and not x_button_clicked:
             update_timer_label(question_timer.get_time())
             question_timer.count_down()
             time.sleep(1)
@@ -290,10 +290,18 @@ def draw_game_window():
     
     # Starts the timer
     timer_thread.start()
-        
-        
+       
+def on_x_button_click():
+
+   global x_button_clicked
+   
+   x_button_clicked = True
+   
+   game_window.destroy()
     
 draw_home_screen()
+
+game_window.protocol("WM_DELETE_WINDOW",on_x_button_click)
 
 # Listens for any events
 game_window.mainloop()
