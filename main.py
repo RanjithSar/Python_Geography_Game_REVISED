@@ -111,6 +111,8 @@ def draw_game_window():
     
     global x_button_clicked
     
+    question_timer.reset()
+    
     '''
     checks if an answer choice is pressed.
     This event is set when an answer choice is pressed.
@@ -141,21 +143,47 @@ def draw_game_window():
         
         answer_clicked.set()
         
-        for item in game_screen.winfo_children():
-            item.destroy()
+        wait_timer = Timer(3)
+        wait_time_over = threading.Event()
+        
+        def show_answer():
             
-        if choice == answers[correct_choice]:
-            message = "Good Job!"
-        else:
-            message = f"Not Quite. The correct answer is {answers[correct_choice]}."
+            if game_screen.winfo_exists():
+                for item in game_screen.winfo_children():
+                    item.destroy()
             
-        message_label = tk.Label(
-            game_screen,
-            text = message,
-            font = SUBTITLE_FONT
-        )
-        labels["message_label"] = message_label
-        labels["message_label"].pack()
+            while wait_timer.get_time() > 0 and not wait_time_over.is_set():
+        
+                if choice == answers[correct_choice]:
+                    message = "Good Job!"
+                else:
+                    message = f"Not Quite. The correct answer is {answers[correct_choice]}."
+                    
+                if game_screen.winfo_exists():
+                    
+                    message_label = tk.Label(
+                        game_screen,
+                        text = message,
+                        font = SUBTITLE_FONT
+                    )
+                    labels["message_label"] = message_label
+                    labels["message_label"].pack()
+
+                wait_timer.count_down()
+                time.sleep(1)
+                
+                labels["message_label"].destroy()
+                
+            wait_time_over.set()
+            
+            game_screen.destroy()
+            
+            draw_game_window()
+        
+        timer_thread = threading.Thread(target = show_answer)
+        
+        timer_thread.start()
+        
     
     '''
     helper function to update just the timer label.
@@ -174,6 +202,7 @@ def draw_game_window():
             update_timer_label(question_timer.get_time())
             question_timer.count_down()
             time.sleep(1)
+            
     
     '''
     creates a random question tuple and unpacks it into three
