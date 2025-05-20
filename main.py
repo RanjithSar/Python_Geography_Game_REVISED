@@ -100,6 +100,7 @@ def draw_home_screen():
 # Initialize timer object for questions
 question_timer = Timer(60)
 
+
 # Check if x button is clicked or not
 x_button_clicked = False
 
@@ -120,6 +121,7 @@ def draw_game_window():
     )
     game_screen.pack()
     
+    # Stores all labels displayed on the screen
     labels = {}
     
     '''
@@ -143,10 +145,25 @@ def draw_game_window():
             text = message,
             font = SUBTITLE_FONT
         )
-        message_label.pack()
-        
+        labels["message_label"] = message_label
+        labels["message_label"].pack()
+    
+    '''
+    helper function to update just the timer label.
+    Accesses this specific label from the labels dicitionary.
+    '''
     def update_timer_label(time_left):
         labels["timer_label"].config(text=f"Time left: {time_left} seconds.")
+    
+    '''
+    helper function for timer thread to count down the timer
+    and update the label accordingly using the update_timer_label function.
+    '''
+    def update_time():
+        while question_timer.get_time() >= 0:
+            update_timer_label(question_timer.get_time())
+            question_timer.count_down()
+            time.sleep(1)
     
     '''
     creates a random question tuple and unpacks it into three
@@ -181,7 +198,11 @@ def draw_game_window():
             command = lambda choice=answers[i]: check_answer(choice)
         )
         ans_button.pack()
-        
+     
+    '''
+    Displays the empty timer label, which is then updated by the 
+    timer thread.
+    '''
     timer_label = tk.Label(
         game_screen,
         text = "",
@@ -190,7 +211,15 @@ def draw_game_window():
     labels["timer_label"] = timer_label
     labels["timer_label"].pack()
     
-    #update_timer_label(60)
+    '''
+    Timer thread to run the timer separate from the main program.
+    This allows the user to click the buttons while the timer runs
+    "in the background."
+    '''
+    timer_thread = threading.Thread(target=update_time)
+    
+    # Starts the timer
+    timer_thread.start()
         
         
     
