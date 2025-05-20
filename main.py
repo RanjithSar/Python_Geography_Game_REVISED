@@ -96,9 +96,6 @@ def draw_home_screen():
     quit_button = tk.Button(start_screen, text="Quit", command=close_application)
     quit_button.pack()
     
-    
-# Initialize timer object for questions
-question_timer = Timer(60)
 
 
 # Check if x button is clicked or not
@@ -110,6 +107,19 @@ Function to draw the game UI.
 def draw_game_window():
     
     global x_button_clicked
+    
+    '''
+    Initialize timer object for questions
+    EASY mode -> 60 seconds
+    MEDIUM mode -> 45 seconds
+    HARD mode -> 30 seconds
+    '''
+    if difficulty == "easy":
+        question_timer = Timer(60)
+    elif difficulty == "medium":
+        question_timer = Timer(45)
+    elif difficulty == "hard":
+        question_timer = Timer(30)
     
     question_timer.reset()
     
