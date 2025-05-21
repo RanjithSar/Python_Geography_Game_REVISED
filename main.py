@@ -176,7 +176,9 @@ def draw_game_window():
             # Runs for exactly three seconds
             while wait_timer.get_time() > 0 and not wait_time_over.is_set() and not x_button_clicked:
         
-                if choice == answers[correct_choice]:
+                if choice == "":
+                    message = f"The correct answer is {answers[correct_choice]}."
+                elif choice == answers[correct_choice]:
                     message = "Good Job!"
                 else:
                     message = f"Not Quite. The correct answer is {answers[correct_choice]}."
@@ -233,6 +235,7 @@ def draw_game_window():
             update_timer_label(question_timer.get_time())
             question_timer.count_down()
             time.sleep(1)
+        check_answer("")
             
     
     '''
