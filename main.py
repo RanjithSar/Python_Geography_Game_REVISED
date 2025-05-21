@@ -290,7 +290,13 @@ def draw_game_window():
     
     # Starts the timer
     timer_thread.start()
-       
+
+'''
+this function runs when x-button on top right is clicked.
+the x_button_clicked variable is set to True, ending all the timer
+threads.
+Then the game window is destroyed.
+'''       
 def on_x_button_click():
 
    global x_button_clicked
@@ -298,9 +304,11 @@ def on_x_button_click():
    x_button_clicked = True
    
    game_window.destroy()
-    
+ 
+# Starts the game by drawing the home screen 
 draw_home_screen()
 
+# Listens for the x-button click event
 game_window.protocol("WM_DELETE_WINDOW",on_x_button_click)
 
 # Listens for any events
