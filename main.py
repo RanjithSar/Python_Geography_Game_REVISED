@@ -165,6 +165,7 @@ def draw_game_window():
         helper function to show the answer evaluation dialogue.
         Shows the dialogue for three seconds, and then the game_screen frame
         is destroyed. The next question is displayed.
+        Displays the correct answer when timer runs out.
         '''
         def show_answer():
             
@@ -235,6 +236,10 @@ def draw_game_window():
             update_timer_label(question_timer.get_time())
             question_timer.count_down()
             time.sleep(1)
+            
+        '''
+        makes sure the correct answer is shown when timer runs out.
+        '''
         check_answer("")
             
     
