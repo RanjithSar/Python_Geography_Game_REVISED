@@ -19,12 +19,15 @@ class Question:
         if self.question_type == 0:
             
             cities = []
+            used_cities = set()
             while (len(cities) < 4):
                 random_city = Question.city_info.choose_random_city()
-                if len(cities) == 0 or random_city[1] not in cities:
+                if random_city[1] not in used_cities:
                     cities.append(random_city)
+                    used_cities.add(random_city[1])
                     
             self.correct_answer = random.randint(0,3)
+            
             city = cities[self.correct_answer]
             
             self.question = f"What state is {city[0]} from?"
@@ -36,10 +39,12 @@ class Question:
         elif self.question_type == 1:
             
             cities = []
+            used_states = set()
             while (len(cities) < 4):
                 random_city = Question.city_info.choose_random_city()
                 if len(cities) == 0 or random_city[0] not in cities:
                     cities.append(random_city)
+                    used_states.add(random_city[0])
                     
             self.correct_answer = random.randint(0,3)
             city = cities[self.correct_answer]
