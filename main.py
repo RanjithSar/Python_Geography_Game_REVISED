@@ -161,6 +161,15 @@ def draw_game_window():
         # tells that the wait time is over
         wait_time_over = threading.Event()
         
+        wait_time_over.clear()
+        
+        if choice == "":
+            message = f"The correct answer is {answers[correct_choice]}."
+        elif choice == answers[correct_choice]:
+            message = "Good Job!"
+        elif choice != answers[correct_choice]:
+            message = f"Not Quite. The correct answer is {answers[correct_choice]}."
+        
         '''
         helper function to show the answer evaluation dialogue.
         Shows the dialogue for three seconds, and then the game_screen frame
@@ -173,17 +182,13 @@ def draw_game_window():
             if game_screen.winfo_exists():
                 for item in game_screen.winfo_children():
                     item.destroy()
-            
+                    
             # Runs for exactly three seconds
             while wait_timer.get_time() > 0 and not wait_time_over.is_set() and not x_button_clicked:
-        
-                if choice == "":
-                    message = f"The correct answer is {answers[correct_choice]}."
-                elif choice == answers[correct_choice]:
-                    message = "Good Job!"
-                else:
-                    message = f"Not Quite. The correct answer is {answers[correct_choice]}."
                 
+                if x_button_clicked:
+                    return
+
                 # Draw message on frame that exists
                 if game_screen.winfo_exists():
                     
@@ -211,8 +216,16 @@ def draw_game_window():
             # destroys the frame
             game_screen.destroy()
             
-            # draws the next question
-            draw_game_window()
+            if not game_screen.winfo_exists():
+                # draws the next question
+                draw_game_window()
+        
+        '''
+        used to stop further execution if x-button is clicked,
+        where the succeeding code is not needed.
+        '''
+        if x_button_clicked:
+            return
         
         # creates and runs the showing dialogue thread.
         timer_thread = threading.Thread(target = show_answer)
@@ -232,15 +245,21 @@ def draw_game_window():
     the timer runs until it runs out or an answer choice is clicked.
     '''
     def update_time():
-        while question_timer.get_time() >= 0 and not answer_clicked.is_set() and not x_button_clicked:
+        while question_timer.get_time() >= 0 and not answer_clicked.is_set():
+            if x_button_clicked:
+                return
             update_timer_label(question_timer.get_time())
             question_timer.count_down()
             time.sleep(1)
             
+        if x_button_clicked:
+            question_timer.reset()
+            
         '''
         makes sure the correct answer is shown when timer runs out.
         '''
-        check_answer("")
+        if not answer_clicked.is_set():
+            check_answer("")
             
     
     '''
@@ -288,6 +307,9 @@ def draw_game_window():
     )
     labels["timer_label"] = timer_label
     labels["timer_label"].pack()
+    
+    if x_button_clicked:
+        return
     
     '''
     Timer thread to run the timer separate from the main program.
