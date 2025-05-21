@@ -26,6 +26,8 @@ difficulty = ""
 game_modes = ["home screen","game play"]
 current_mode = game_modes[0]
 
+score = 0
+
 '''
 The main window the game takes place in.
 WIDTH and HEIGHT are found in CONSTANTS.py file
@@ -45,6 +47,9 @@ PARAGRAPH_FONT = tkFont.Font(family="Verdana",size=15)
 Draws the main menu. The program always starts here on startup.
 '''
 def draw_home_screen():
+    
+    global score
+    score = 0
     
     '''
     This function switches from home screen state to gameplay state,
@@ -152,6 +157,8 @@ def draw_game_window():
     '''
     def check_answer(choice):
         
+        global score
+        
         # tells the timer to stop running
         answer_clicked.set()
         
@@ -167,6 +174,12 @@ def draw_game_window():
             message = f"The correct answer is {answers[correct_choice]}."
         elif choice == answers[correct_choice]:
             message = "Good Job!"
+            if difficulty == "easy":
+                score += 5
+            elif difficulty == "medium":
+                score += 10
+            elif difficulty == "hard":
+                score += 15
         elif choice != answers[correct_choice]:
             message = f"Not Quite. The correct answer is {answers[correct_choice]}."
         
@@ -267,6 +280,16 @@ def draw_game_window():
     variables.
     '''
     question_set = Question()
+    
+    '''
+    interchanges between types of questions on a 50-50 basis.
+    '''
+    seed = random.randint(0,100)
+    if seed <= 50:
+        question_set.change_question_type(0)
+    else:
+        question_set.change_question_type(1)
+    
     question, answers, correct_choice = question_set.generate_question()
     
     '''
@@ -307,6 +330,14 @@ def draw_game_window():
     )
     labels["timer_label"] = timer_label
     labels["timer_label"].pack()
+    
+    score_label = tk.Label(
+        game_screen,
+        text = f"Score: {score}",
+        font = PARAGRAPH_FONT
+    )
+    labels["score_label"] = score_label
+    labels["score_label"].pack()
     
     if x_button_clicked:
         return
